@@ -92,7 +92,7 @@ const huntBot = async (msg, token) => {
                 // code block
             }
         }
-        else _interval = 14
+        else _interval = 5,1
         console.log(new Date())
         console.log(newID.toString(), message)
         try{
@@ -139,7 +139,7 @@ export default async function startJobs() {
 
     huntBot('hunt', ["OTQ0MzA2OTkwMTgyNzA3MjYw.Gq6OS9.x5T3xx9eHdvt5852ZZgdAhwT6TocEiEAxXyPGg"]);
     await Promise.delay(5000)
-    // huntBot('owo', ["NzU5NDE5NTM0NzY2NTA1OTk1.GbdrcH.jF_ydZZbavRWVRZ02sOuKHMnGzl4ULL6jz6dyI"]);
+    huntBot('dpray', ["OTQ0MzA2OTkwMTgyNzA3MjYw.Gq6OS9.x5T3xx9eHdvt5852ZZgdAhwT6TocEiEAxXyPGg"]);
 
     let cID
     while(!cID) {
