@@ -49,7 +49,7 @@ const updateRoomNameByTime = async (channelID, interval) => {
             // console.log(res.data)
         }
         catch(e) {
-            console.log(e.response.data);
+            console.log(e);
         }
         await Promise.delay(interval)
         direction = curLen === maxL ? -1 : curLen === 0 ? 1 : direction
@@ -92,7 +92,7 @@ const huntBot = async (msg, token) => {
                 // code block
             }
         }
-        else _interval = 5,1
+        else _interval = 5*60 + 10
         console.log(new Date())
         console.log(newID.toString(), message)
         try{
