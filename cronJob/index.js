@@ -49,7 +49,7 @@ const updateRoomNameByTime = async (channelID, interval) => {
             // console.log(res.data)
         }
         catch(e) {
-            console.log(e);
+            console.log(e.response.data);
         }
         await Promise.delay(interval)
         direction = curLen === maxL ? -1 : curLen === 0 ? 1 : direction
@@ -96,7 +96,7 @@ const updateNickname = async (interval) => {
             // console.log(res.data)
         }
         catch(e) {
-            console.log(e);
+            console.log(e.response.data);
         }
         await Promise.delay(interval)
         direction = curLen === maxL ? -1 : curLen === 0 ? 1 : direction
@@ -171,24 +171,25 @@ const findChannelId = async () => {
                 "Content-Type": "application/json"
             }
         })
+        // console.log(res.data[res.data.length - 2] )
         // console.log(res.data[res.data.length - 1] )
-        const curChannel = res.data.find(c => c.name == 'ngay mai se het buon...ngu' || c.name.includes('AM') || c.name.includes('PM') || c.name.includes('___'))
+        const curChannel = res.data.find(c => c.permission_overwrites.find(p => p.id == "944306990182707260") )
         // console.log(curChannel)
         return curChannel?.id
     }
     catch(e) {
-        console.log(e);
+        console.log(e.response.data);
     }
 }
 
 export default async function startJobs() {
     console.log('Jobs started')
 
-    huntBot('hunt', ["OTQ0MzA2OTkwMTgyNzA3MjYw.Gq6OS9.x5T3xx9eHdvt5852ZZgdAhwT6TocEiEAxXyPGg"]);
-    await Promise.delay(5000)
-    huntBot('dpray', ["OTQ0MzA2OTkwMTgyNzA3MjYw.Gq6OS9.x5T3xx9eHdvt5852ZZgdAhwT6TocEiEAxXyPGg"]);
+    // huntBot('hunt', ["OTQ0MzA2OTkwMTgyNzA3MjYw.Gq6OS9.x5T3xx9eHdvt5852ZZgdAhwT6TocEiEAxXyPGg"]);
+    // await Promise.delay(5000)
+    // huntBot('dpray', ["OTQ0MzA2OTkwMTgyNzA3MjYw.Gq6OS9.x5T3xx9eHdvt5852ZZgdAhwT6TocEiEAxXyPGg"]);
 
-    updateNickname(1200)
+    // updateNickname(3000)
 
     let cID
     while(!cID) {
