@@ -146,9 +146,9 @@ export default async function startJobs() {
         cID = await findChannelId()
         if(cID) console.log("found cID", cID);
         else console.log("not found cID");
-        await Promise.delay(10000)
+        await Promise.delay(30000)
     }
     if(cID)
-        updateRoomNameByTime(cID, 1000)
+        updateRoomNameByTime(cID, 1200)
     else console.log("cID not found");
 }
