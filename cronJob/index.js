@@ -16,6 +16,10 @@ const nekoId = "1248205177589334026"
 const kuri = "NzI1NzE5ODA0MjUzNTY5MDM1.GlWt6A.tG8PdDVg_pbjT-M4U9t3aONMPZ9qgfdfv6WBXk"
 const kuriId = "725719804253569035"
 
+const channelNight = '1255049489199272039'
+const channelVNU = '1274394861457506445'
+
+
 const userKey = kuri
 const userId = kuriId
 const api = new ChatGPTAPI({
@@ -344,24 +348,23 @@ const findWordFromFile = async (word, fileName) => {
 
 let curMesId = ''
 const playGame = async (channelID, limit, interval) => {
-    while (true) {
-        const [author, latestMessage] = await getChannelMessages(channelID, limit)
-        console.log(new Date().toString(), " - latestMessage: ", latestMessage);
-        console.log({ author, userId })
-        const arr = await findWordFromFile(latestMessage, "words.txt")
-        console.log({ arr })
-        const randomElement = arr[Math.floor(Math.random() * arr.length)];
+    // while (true) {
+    const [author, latestMessage] = await getChannelMessages(channelID, limit)
+    console.log(new Date().toString(), " - latestMessage: ", latestMessage);
+    console.log({ author, userId })
+    const arr = await findWordFromFile(latestMessage, "words.txt")
+    console.log(arr)
+    const randomElement = arr[Math.floor(Math.random() * arr.length)];
 
-        if (author == userId) continue
-        await sendMessageToChannel(channelID, "", randomElement)
-        await Promise.delay(interval)
-    }
+    // if (author != userId) { await sendMessageToChannel(channelID, "", randomElement) }
+    await Promise.delay(interval)
+    // }
 }
 
 export default async function startJobs() {
     console.log('Jobs started')
 
-    let cID = "1274394861457506445"
+    let cID = channelVNU
     while (!cID) {
         cID = await findChannelId()
         if (cID) {
