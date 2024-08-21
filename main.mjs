@@ -1,7 +1,6 @@
-import createError from 'http-errors';
-import express from 'express';
-import path from 'path';
 import cookieParser from 'cookie-parser';
+import express from 'express';
+import createError from 'http-errors';
 import logger from 'morgan';
 
 import startJobs from './cronJob/index.js';
@@ -30,14 +29,14 @@ app.use(function (err, req, res, next) {
 });
 
 try {
-  app.listen(process.env.PORT || 5000, async (err) => {
+  app.listen(process.env.PORT || 3003, async (err) => {
     if (err) throw err;
-    console.log(`${'Discord Auto'} server is listening on port ${3000}`);
+    console.log(`${'Discord Auto'} server is listening on port ${3003}`);
     console.log(new Date());
     startJobs()
   });
 }
-catch(e) {
+catch (e) {
   console.log(e);
 }
 
