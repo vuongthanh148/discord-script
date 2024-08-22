@@ -333,6 +333,8 @@ const findWordFromFile = async (word, fileName) => {
 
     const results = [];
 
+
+
     for await (const line of rl) {
         const obj = JSON.parse(line);
         const words = obj.text.split(' ');
@@ -341,24 +343,42 @@ const findWordFromFile = async (word, fileName) => {
             results.push(`${word} ${words[index + 1]}`);
         }
     }
-
+    const endWord = results.map(async w => {
+        const res = await checkWord(filePath, w.split(" ")[1] + " ")
+        if (res) return w
+    })
+    console.log("endWord", endWord.length)
+    if (endWord.length > 0) return endWord
     return results;
 }
 
 
-let curMesId = ''
-const playGame = async (channelID, limit, interval) => {
-    // while (true) {
-    const [author, latestMessage] = await getChannelMessages(channelID, limit)
-    console.log(new Date().toString(), " - latestMessage: ", latestMessage);
-    console.log({ author, userId })
-    const arr = await findWordFromFile(latestMessage, "words.txt")
-    console.log(arr)
-    const randomElement = arr[Math.floor(Math.random() * arr.length)];
+const checkWord = async (filePath, word) => {
+    try {
+        console.log({ word })
+        const data = await readFile(filePath, 'utf8');
+        const words = data.split(/\s+/); // split by whitespace
+        return words.includes(word);
+    } catch (err) {
+        console.error(err);
+        return false;
+    }
+};
 
-    // if (author != userId) { await sendMessageToChannel(channelID, "", randomElement) }
-    await Promise.delay(interval)
-    // }
+
+let curMesId = ''
+const playGame = async (channelID, limit, interval, isAnswer) => {
+    while (true) {
+        const [author, latestMessage] = await getChannelMessages(channelID, limit)
+        console.log(new Date().toString(), " - latestMessage: ", latestMessage);
+        console.log({ author, userId })
+        const arr = await findWordFromFile(latestMessage, "words.txt")
+        console.log(arr)
+        const randomElement = arr[Math.floor(Math.random() * arr.length)];
+
+        if (author != userId && isAnswer) { await sendMessageToChannel(channelID, "", randomElement) }
+        await Promise.delay(interval)
+    }
 }
 
 export default async function startJobs() {
@@ -375,6 +395,6 @@ export default async function startJobs() {
         // await Promise.delay(30000)
     }
     if (cID)
-        playGame(cID, 50, 5000)
+        playGame(cID, 50, 7000, true)
     else console.log("cID not found");
 }
