@@ -13,7 +13,7 @@ const sdn = "OTQ0MzA2OTkwMTgyNzA3MjYw.Gq6OS9.x5T3xx9eHdvt5852ZZgdAhwT6TocEiEAxXy
 const kjvId = "399958127321153546"
 const nekoId = "1248205177589334026"
 
-const kuri = "NzI1NzE5ODA0MjUzNTY5MDM1.GlWt6A.tG8PdDVg_pbjT-M4U9t3aONMPZ9qgfdfv6WBXk"
+const kuri = "NzI1NzE5ODA0MjUzNTY5MDM1.GCP9GF.E7BLNX_K-kA7yy_UfM48drKI1_18RF3_HQ2ATA"
 const kuriId = "725719804253569035"
 
 const channelNight = '1255049489199272039'
@@ -73,7 +73,7 @@ const updateRoomNameByTime = async (channelID, interval) => {
             // console.log(res.data)
         }
         catch (e) {
-            console.log(e.response.data);
+            console.log({ e });
         }
         await Promise.delay(interval)
         direction = curLen === maxL ? -1 : curLen === 0 ? 1 : direction
@@ -260,7 +260,7 @@ const getChannelMessages = async (channelID, limit) => {
         for (const msg of res.data) {
             const author = msg.author.id
             if (msg.reactions && msg.reactions[0].emoji.name == "checked") return [author, msg.content.split(' ')[1]]
-            else if (msg.content.includes('**')) {
+            else if (msg.content.includes('**') && msg.content.includes('Từ bắt đầu')) {
                 let str = msg.content
                 let match = str.match(/\*\*(.*?)\*\*/);
                 let word = match ? match[1] : ''; // 'di mọi'
@@ -333,21 +333,23 @@ const findWordFromFile = async (word, fileName) => {
 
     const results = [];
 
-
+    const endWord = []
 
     for await (const line of rl) {
         const obj = JSON.parse(line);
         const words = obj.text.split(' ');
         const index = words.indexOf(word);
         if (index !== -1 && index < words.length - 1) {
-            results.push(`${word} ${words[index + 1]}`);
+            const newWord = `${word} ${words[index + 1]}`
+            if (newWord.indexOf('-') > -1) continue
+            const res = await checkWord(filePath, words[index + 1] + " ")
+            if (res)
+                endWord.push(newWord);
+            results.push(newWord)
         }
     }
-    const endWord = results.map(async w => {
-        const res = await checkWord(filePath, w.split(" ")[1] + " ")
-        if (res) return w
-    })
-    console.log("endWord", endWord.length)
+
+    console.log("endWord length", endWord.length)
     if (endWord.length > 0) return endWord
     return results;
 }
@@ -355,10 +357,10 @@ const findWordFromFile = async (word, fileName) => {
 
 const checkWord = async (filePath, word) => {
     try {
-        console.log({ word })
+        // console.log({ word })
         const data = await readFile(filePath, 'utf8');
-        const words = data.split(/\s+/); // split by whitespace
-        return words.includes(word);
+        // const words = data.split(/\s+/); // split by whitespace
+        return data.indexOf(word) == -1;
     } catch (err) {
         console.error(err);
         return false;
@@ -366,7 +368,6 @@ const checkWord = async (filePath, word) => {
 };
 
 
-let curMesId = ''
 const playGame = async (channelID, limit, interval, isAnswer) => {
     while (true) {
         const [author, latestMessage] = await getChannelMessages(channelID, limit)
@@ -376,15 +377,16 @@ const playGame = async (channelID, limit, interval, isAnswer) => {
         console.log(arr)
         const randomElement = arr[Math.floor(Math.random() * arr.length)];
 
-        if (author != userId && isAnswer) { await sendMessageToChannel(channelID, "", randomElement) }
-        await Promise.delay(interval)
+        if (author != userId && isAnswer && arr.length > 0) { await sendMessageToChannel(channelID, "", randomElement) }
+        await Promise.delay(Math.floor(Math.random() * 5 + 5) * 1000)
     }
 }
 
 export default async function startJobs() {
     console.log('Jobs started')
 
-    let cID = channelVNU
+    // let cID = channelVNU
+    let cID = channelNight
     while (!cID) {
         cID = await findChannelId()
         if (cID) {
@@ -394,7 +396,9 @@ export default async function startJobs() {
         else console.log("not found cID");
         // await Promise.delay(30000)
     }
-    if (cID)
-        playGame(cID, 50, 7000, true)
+    if (cID) {
+        // playGame(channelNight, 50, 3000, true)
+        playGame(channelVNU, 50, 2500, false)
+    }
     else console.log("cID not found");
 }
