@@ -13,7 +13,7 @@ const sdn = "OTQ0MzA2OTkwMTgyNzA3MjYw.Gq6OS9.x5T3xx9eHdvt5852ZZgdAhwT6TocEiEAxXy
 const kjvId = "399958127321153546"
 const nekoId = "1248205177589334026"
 
-const kuri = "NzI1NzE5ODA0MjUzNTY5MDM1.GCP9GF.E7BLNX_K-kA7yy_UfM48drKI1_18RF3_HQ2ATA"
+const kuri = "NzI1NzE5ODA0MjUzNTY5MDM1.GfAfws._l_L6aEAfMUpl7ao8yq15wQyGwsnQo3dAy23TA"
 const kuriId = "725719804253569035"
 
 const channelNight = '1255049489199272039'
@@ -377,8 +377,11 @@ const playGame = async (channelID, limit, interval, isAnswer) => {
         console.log(arr)
         const randomElement = arr[Math.floor(Math.random() * arr.length)];
 
-        if (author != userId && isAnswer && arr.length > 0) { await sendMessageToChannel(channelID, "", randomElement) }
-        await Promise.delay(Math.floor(Math.random() * 5 + 5) * 1000)
+        if (author != userId && isAnswer && arr.length > 0) {
+            await sendMessageToChannel(channelID, "", randomElement)
+            await Promise.delay(Math.floor(Math.random() * 5 + 3) * 1000)
+        }
+        await Promise.delay(1 * 1000)
     }
 }
 
@@ -398,7 +401,7 @@ export default async function startJobs() {
     }
     if (cID) {
         // playGame(channelNight, 50, 3000, true)
-        playGame(channelVNU, 50, 2500, false)
+        playGame(channelVNU, 50, 4000, true)
     }
     else console.log("cID not found");
 }
